@@ -30,7 +30,6 @@ public class Messkonduktor {
     for (int i = 0; i < messResultate.length; i++) {
       messResultate[i] = einzelneMessungDurchfuehren();
     }
-
     return messResultate;
   }
 
