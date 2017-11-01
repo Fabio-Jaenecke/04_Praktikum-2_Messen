@@ -7,73 +7,126 @@ import java.util.Random;
  */
 public class MessApp {
   private Messkonduktor messkonduktor;
-  int[] messAnzahl = new int[400000];
-  int[][] laufzeiten = new int[10][20];
+  private int[][] laufzeiten; 
+  private int[] secondArraylaufzeiten; //is pseudonomically the second array of the multidimensional array.
 
   /**
    * Fuehrt eine Messung durch.
    */
   public void messen() {
     initialisieren();
-    /*analyseDurchfuehren();
+    analyseDurchfuehren();
     berechneUndDruckeMittelwerteMessreihe();
-    berechneUndDruckeMittelwerteMessung();*/
+    berechneUndDruckeMittelwerteMessung();
   }
 
   /**
-   * Diese Methode generiet 400'000 Zahlen und speichert dessen Messwerte in dem Mehrdimensionalen Array
-   * "laufzeiten"
+   *  Diese Methode initialisiert die Messungen.
    */
-  
   private void initialisieren() {
-        // Beide for-loops füllen alle 200 Einträge des Multidimensionalen Arrays:
-        for (int j = 0; j < laufzeiten.length; j++) { //Iteriert 10 mal
-            for (int k = 0; k < laufzeiten[0].length; k++){ //iteriert 20 mal
-                laufzeiten[k] = messkonduktor.messungenDurchfuehren(messAnzahl); 
-                //gibt 400000mal eine Messung mit Zufallszahl und dessen Laufzeit zurück.
-            }
-        }
+      laufzeiten = new int[10][20];
+      messkonduktor = new Messkonduktor(400000);   
     }
  
+  /**
+   * Füllt gesamthaft 200 (10 * 20) Einträge von Messungen in das '2d Array' laufzeiten.
+   */
   private void analyseDurchfuehren() {
-    // durchzufuehren und in der Objektsammlung zu speichern.
+      bitteWarten();
+      resultateBerechnen();
+      resultateAusgeben();
   }
-
+  
+  /*
+   * Weist darauf hin, dass die Berechnung nun gestartet wurde, welche etwas dauert.
+   */
+  private void bitteWarten() {
+      System.out.println("Please wait while the calculation is in progress. This may take a few seconds...");
+      System.out.println();
+  }
+  
+  /**
+   * Berechnet alle Messungen der Laufzeiten pro Messung.
+   */
+  private void resultateBerechnen(){
+      for (int x = 0; x < laufzeiten.length; x++) { //iteriert 10 mal
+            secondArraylaufzeiten = new int[laufzeiten[x].length]; //an Array of 20
+            laufzeiten[x] = messkonduktor.messungenDurchfuehren(secondArraylaufzeiten); //Gibt 20 mal Messungen zurück.
+      }
+  }
+  
+  /**
+   * Gibt die Resultate der Messungen aus. Die Resultate werden in einer Matrix dargestellt.
+   * Die Matrix enthält die Reihen und Spalten des zweidimensionalen Arrays.
+   * Pro Reihe und Spalte wird eine Beschriftung angezeigt.
+   */
+  private void resultateAusgeben(){
+      System.out.println("Resultate (in Millisekunden):");
+      System.out.println();
+      System.out.print("Spalten ");
+      spaltenAusgeben();
+      System.out.println();
+      System.out.println(" Reihen");
+      reihenAusgeben();
+      System.out.println();
+      System.out.println();
+  }
+  
+  /*
+   * Gibt die Spaltenüberschrift aus.
+   */
+  private void spaltenAusgeben(){
+      for (int j = 0; j < laufzeiten[0].length; j++){
+           System.out.print(String.format("%02d", (j + 1)) + " ");
+      }
+  }
+  
+  /**
+   * Gibt die Reihenüberschriften aus und gibt alle Messdaten für alle Messreihen aus.
+   */
+  private void reihenAusgeben(){
+      for (int i = 0; i < laufzeiten.length; i++){
+          System.out.print("   " + (String.format("%02d", (i + 1))) + "   ");
+          for (int j = 0; j < laufzeiten[i].length; j++){
+            System.out.print(laufzeiten[i][j]);
+            System.out.print(" ");
+          }
+          System.out.println();
+      }
+  }
+  
+  /**
+   * Berechnet und druckt den Mittelwert von jeder 'Reihe'.
+   */
   private void berechneUndDruckeMittelwerteMessreihe() {
-        int[] mittelwert = new int[10]; //equal to the lenght of Messreihen.
-        int summe = 0;
-      
-        //berechnet den Mittelwert von jeder Reihe:
+        System.out.println("Mittelwerte Messreihen:");
+        System.out.println();
         for (int j = 0; j < laufzeiten.length; j++){ //Iteriert 10 mal
-            for (int k = 0; k < laufzeiten[0].length; k++){ //iteriert 20 mal
-                summe += laufzeiten[j][k]; //adds up the sum for each placeholder in k.
+            int summe = 0;
+            for (int k = 0; k < laufzeiten[j].length; k++){ //iteriert 20 mal
+                summe += laufzeiten[j][k]; //adds up all values per 'row'.
             }
-            mittelwert[j] = summe / laufzeiten.length; //calculates the mittelwert.
-            summe = 0; //reset the sum for calculating the mittelwert of the next row (j) correctly.
+            int mittelwert = summe / laufzeiten[j].length;
+            System.out.println("mw Messreihe " + (String.format("%02d", (j + 1))) + ": " + mittelwert + "ms");
         }
-        
-        //Gibt den Mittelwert von jeder Reihe aus:
-        for (int m : mittelwert) {
-            System.out.println(m);
-        }
+        System.out.println();
   }
-
+  
+  /**
+   * Berechnet und druckt den Mittelwert von jeder 'Spalte'.
+   */
   private void berechneUndDruckeMittelwerteMessung() {
-      int[] mittelwert = new int[200]; //represents the total amount of placeholders in the multi-dimensional array.
-      int summe = 0;
-      for (int j = 0; j < laufzeiten.length; j++){ //Iteriert 10 mal
-            for (int k = 0; k < laufzeiten[0].length; k++){ //iteriert 20 mal
-                for (int zeitdauerInMs : messkonduktor.messungenDurchfuehren(messAnzahl)) {
-                     summe += zeitdauerInMs; //Gibt den Mittelwert für alle einzelne Messungen.
-                }
-                mittelwert[k] = (summe / messkonduktor.messungenDurchfuehren(messAnzahl).length);
-                summe = 0;
+        System.out.println();
+        System.out.println("Mittelwerte Messspalten:");
+        System.out.println();
+        for (int j = 0; j < secondArraylaufzeiten.length; j++){ //Iteriert 20 mal
+            int summe = 0;
+            for (int k = 0; k < laufzeiten.length; k++){ //iteriert 10 mal
+                summe += laufzeiten[k][j]; //adds up all values per 'column'.
             }
-      }
-      
-      //Gibt den Mittelwert von jeder Reihe aus / erwartet sind 200 Einträge:
-      for (int m : mittelwert) {
-          System.out.println(m);
-      }
+            int mittelwert = summe / laufzeiten.length; //calculates the mittelwert.
+            System.out.println("mw Messspalte " + (String.format("%02d", (j + 1))) + ": " + mittelwert + "ms");
+        }
+        System.out.println();
   }
 }
