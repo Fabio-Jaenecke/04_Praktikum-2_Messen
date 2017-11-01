@@ -73,7 +73,7 @@ public class MessApp {
   }
   
   /*
-   * Gibt die Spaltenüberschrift aus.
+   * Gibt die Spaltennummerierung aus.
    */
   private void spaltenAusgeben(){
       for (int j = 0; j < laufzeiten[0].length; j++){
@@ -82,7 +82,7 @@ public class MessApp {
   }
   
   /**
-   * Gibt die Reihenüberschriften aus und gibt alle Messdaten für alle Messreihen aus.
+   * Gibt die Reihennummerierung aus und gibt alle Messdaten für alle Messreihen aus.
    */
   private void reihenAusgeben(){
       for (int i = 0; i < laufzeiten.length; i++){
@@ -101,14 +101,15 @@ public class MessApp {
   private void berechneUndDruckeMittelwerteMessreihe() {
         System.out.println("Mittelwerte Messreihen:");
         System.out.println();
-        for (int j = 0; j < laufzeiten.length; j++){ //Iteriert 10 mal
+        for (int i = 0; i < laufzeiten.length; i++){ //Iteriert 10 mal
             int summe = 0;
-            for (int k = 0; k < laufzeiten[j].length; k++){ //iteriert 20 mal
-                summe += laufzeiten[j][k]; //adds up all values per 'row'.
+            for (int j = 0; j < laufzeiten[i].length; j++){ //iteriert 20 mal
+                summe += laufzeiten[i][j]; //adds up all values per 'row'.
             }
-            int mittelwert = summe / laufzeiten[j].length;
-            System.out.println("mw Messreihe " + (String.format("%02d", (j + 1))) + ": " + mittelwert + "ms");
+            int mittelwert = summe / laufzeiten[i].length;
+            System.out.println("mw Messreihe " + (String.format("%02d", (i + 1))) + ": " + mittelwert + "ms");
         }
+        System.out.println();
         System.out.println();
   }
   
@@ -116,13 +117,12 @@ public class MessApp {
    * Berechnet und druckt den Mittelwert von jeder 'Spalte'.
    */
   private void berechneUndDruckeMittelwerteMessung() {
-        System.out.println();
         System.out.println("Mittelwerte Messspalten:");
         System.out.println();
         for (int j = 0; j < secondArraylaufzeiten.length; j++){ //Iteriert 20 mal
             int summe = 0;
-            for (int k = 0; k < laufzeiten.length; k++){ //iteriert 10 mal
-                summe += laufzeiten[k][j]; //adds up all values per 'column'.
+            for (int i = 0; i < laufzeiten.length; i++){ //iteriert 10 mal
+                summe += laufzeiten[i][j]; //adds up all values per 'column'.
             }
             int mittelwert = summe / laufzeiten.length; //calculates the mittelwert.
             System.out.println("mw Messspalte " + (String.format("%02d", (j + 1))) + ": " + mittelwert + "ms");
